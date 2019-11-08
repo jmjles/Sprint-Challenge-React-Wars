@@ -1,17 +1,34 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
+
+import PersonCard from './components/PersonCard';
+import Font from '@material-ui/core/Typography';
+
+import Pic from './sw-bg.jpg'
 import './App.css';
 
-const App = () => {
-  // Try to think through what state you'll need for this app before starting. Then build out
-  // the state properties here.
+const $ = require('axios');
 
-  // Fetch characters from the star wars api in an effect hook. Remember, anytime you have a 
-  // side effect in a component, you want to think about which state and/or props it should
-  // sync up with, if any.
+
+
+const App = () => {
+  const [people,setPeople] = useState([]);
+  useEffect( () => { 
+    for(let i=1;i<=10;i++){
+      (async () => {
+        const res = await $.get(`https://swapi.co/api/people/${i}/`);
+        setPeople(prev=>(
+          [...prev,res.data]
+        ))
+      })();
+    }
+  },[]
+  )
 
   return (
     <div className="App">
-      <h1 className="Header">React Wars</h1>
+      <img src={Pic} className="background"></img>
+      <Font variant='h1'>React Wars</Font>
+      <PersonCard people = {people} />
     </div>
   );
 }
